@@ -42,7 +42,9 @@ class PostSeeder extends Seeder
             }
         }
 
-        DB::table('posts')->insert($data);
+        foreach (array_chunk($data, 50) as $chunk) {
+            DB::table('posts')->insert($chunk);
+        }
 
         $data = [];
         // sync posts with platforms
