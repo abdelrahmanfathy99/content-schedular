@@ -61,8 +61,12 @@ class PostRequest extends FormRequest
             }
 
             // Validate scheduled_time is not in the past
+            $post = $this->route('post');
             if ($status === 'scheduled' && $scheduledTime) {
-                if (now('Africa/Cairo')->gt($scheduledTime)) {
+                $isUpdate = $post !== null;
+                $oldScheduledTime = $post?->scheduled_time;
+                $scheduledTimeChanged = !$isUpdate || $oldScheduledTime != $scheduledTime;
+                if ($scheduledTimeChanged && now('Africa/Cairo')->gt($scheduledTime)) {
                     $validator->errors()->add(
                         'scheduled_time',
                         'The scheduled time cannot be in the past.'

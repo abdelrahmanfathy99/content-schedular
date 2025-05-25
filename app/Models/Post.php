@@ -16,6 +16,7 @@ class Post extends Model
     use HasFactory, LogsActivity;
 
     protected $guarded = [];
+    protected static $recordEvents = ['updated', 'deleted'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -89,7 +90,7 @@ class Post extends Model
             'published_at' => $status === 'published' ? now() : null,
         ]);
 
-        $post->syncPlatforms($platformIds, $status);
+        $post->syncPlatforms($platformIds, $status, $postId);
 
         if ($post->status === 'scheduled' && $post->scheduled_time) {
             $delayedTime = Carbon::now('Africa/Cairo')->diffInSeconds(Carbon::parse($scheduledTime, 'Africa/Cairo'));
@@ -99,7 +100,7 @@ class Post extends Model
         return $post;
     }
 
-    public function syncPlatforms(array $platformIds, string $status)
+    public function syncPlatforms(array $platformIds, string $status, ?int $postId = null)
     {
         $syncData = [];
         $oldPlatformIds = $this->platforms()->pluck('platforms.id')->toArray();
@@ -109,13 +110,14 @@ class Post extends Model
 
         $this->platforms()->sync($syncData);
 
-        if ($oldPlatformIds !== $platformIds) {
+        if ($oldPlatformIds !== $platformIds && $postId) {
             activity()
                 ->performedOn($this)
                 ->withProperties([
                     'old_platform_ids' => $oldPlatformIds,
                     'new_platform_ids' => $platformIds,
                 ])
+                ->event('post platforms updated')
                 ->log('Post platforms updated');
         }
     }
