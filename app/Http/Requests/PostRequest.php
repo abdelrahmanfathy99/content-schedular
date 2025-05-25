@@ -46,6 +46,8 @@ class PostRequest extends FormRequest
         $validator->after(function ($validator) {
             $content = $this->input('content', '');
             $platformIds = $this->input('platform_ids', []);
+            $status = $this->input('status');
+            $scheduledTime = $this->input('scheduled_time');
 
             foreach ($platformIds as $platformId) {
                 $maxLength = $this->platformMaxLengths[$platformId] ?? null;
@@ -54,6 +56,16 @@ class PostRequest extends FormRequest
                     $validator->errors()->add(
                         'content',
                         "Content exceeds the maximum allowed length of {$maxLength} characters for {$platformEnum->label()} platform"
+                    );
+                }
+            }
+
+            // Validate scheduled_time is not in the past
+            if ($status === 'scheduled' && $scheduledTime) {
+                if (now('Africa/Cairo')->gt($scheduledTime)) {
+                    $validator->errors()->add(
+                        'scheduled_time',
+                        'The scheduled time cannot be in the past.'
                     );
                 }
             }
