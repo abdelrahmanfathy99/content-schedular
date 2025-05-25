@@ -24,12 +24,15 @@ across multiple social platforms.
 ## Installation
 
 - clone the repo (git clone https://github.com/abdelrahmanfathy99/content-schedular.git)
+- cd backend
 - composer install
 - cp .env.example .env
 - configuration of database in .env file
 - php artisan key:generate
 - php artisan migrate --seed
 - php artisan serve
+- cd frontend
+- npm install then npm run dev
 
 ## API Testing with Postman
 
