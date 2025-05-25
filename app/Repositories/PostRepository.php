@@ -25,7 +25,7 @@ class PostRepository implements PostRepositoryInterface
     public function getWithFilters(array $data)
     {
         return Post::query()
-            ->with(['platforms:id,type'])
+            ->with(['platforms:id,type', 'activities'])
             ->for(Auth::id())
             ->filter($data)
             ->paginate($data['per_page'] ?? 10, page: $data['page'] ?? 1);

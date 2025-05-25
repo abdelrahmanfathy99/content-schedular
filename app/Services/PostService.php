@@ -18,7 +18,7 @@ class PostService
     public function fetch(Post $post)
     {
         return response()->json([
-            'post' => $post->load('platforms:id,type'),
+            'post' => $post->load(['platforms:id,type', 'activities']),
         ], 201);
     }
 

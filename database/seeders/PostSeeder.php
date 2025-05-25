@@ -42,7 +42,10 @@ class PostSeeder extends Seeder
             }
         }
 
-        DB::table('posts')->insert($data);
+        // DB::table('posts')->insert($data);
+        foreach ($data as $postData) {
+            Post::create($postData);
+        }
 
         $data = [];
         // sync posts with platforms
