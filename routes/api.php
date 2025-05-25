@@ -19,7 +19,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/platforms', [PlatFormController::class, 'index']);
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'dashboardStats']);
+    Route::get('/platform', [DashboardController::class, 'platformStats']);
 
     Route::prefix('user')->group(function () {
         Route::resource('post', PostController::class)->only(['index', 'show', 'store', 'update', 'destroy']);

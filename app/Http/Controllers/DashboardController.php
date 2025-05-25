@@ -12,8 +12,13 @@ class DashboardController extends Controller
         $this->postService = $postService;
     }
 
-    public function index()
+    public function dashboardStats()
     {
         return $this->postService->getDashboardStats();
+    }
+
+    public function platformStats()
+    {
+        return $this->postService->getPlatFormStats();
     }
 }

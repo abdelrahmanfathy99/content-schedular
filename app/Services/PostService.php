@@ -32,15 +32,16 @@ class PostService
 
     public function getDashboardStats()
     {
-        $data = $this->postRepository->getStats(Auth::id());
+        $result = $this->postRepository->getDashboardStats(Auth::id());
 
-        return response()->json([
-            'total' => $data->total,
-            'published' => $data->published_count,
-            'scheduled' => $data->scheduled_count,
-            'draft' => $data->draft_count,
-            'current_month_count' => $data->current_month_count,
-        ], 201);
+        return response()->json($result, 201);
+    }
+
+    public function getPlatFormStats()
+    {
+        $result = $this->postRepository->getPlatFormStats(Auth::id());
+
+        return response()->json($result, 201);
     }
 
     public function create(array $data)

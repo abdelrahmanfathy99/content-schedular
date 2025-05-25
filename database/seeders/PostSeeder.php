@@ -35,7 +35,9 @@ class PostSeeder extends Seeder
                     'status' => $status,
                     'scheduled_time' => $status !== 'draft' ? $randomDate->format('Y-m-d H:i:s') : null,
                     'published_at' => $status === 'published' ? $randomDate->addMinutes(rand(1, 5))->format('Y-m-d H:i:s') : null,
-                    'user_id' => $userId
+                    'user_id' => $userId,
+                    'created_at' => $randomDate->subDays(2),
+                    'updated_at' => $randomDate->setDays(2),
                 ];
             }
         }

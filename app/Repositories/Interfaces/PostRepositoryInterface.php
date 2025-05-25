@@ -9,5 +9,6 @@ interface PostRepositoryInterface
 {
     public function upsertAndAttachData(array $data): Post;
     public function getWithFilters(array $filters);
-    public function getStats(int $userId);
+    public function getDashboardStats(int $userId);
+    public function getPlatFormStats(int $userId);
 }
