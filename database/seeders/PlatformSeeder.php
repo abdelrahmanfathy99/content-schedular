@@ -25,7 +25,7 @@ class PlatformSeeder extends Seeder
 
         Platform::updateOrCreate(
             [
-                'id' => Instagram
+                'id' => INSTAGRAM
             ],
             [
                 'name' => 'instagram page',
