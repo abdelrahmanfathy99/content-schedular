@@ -38,7 +38,7 @@ across multiple social platforms.
 
 A Postman collection is included to help you test all API endpoints easily.
 
-- You can find the collection in the `/postman` folder
+- You can find the collection in the `backend/postman` folder
 - Import the collection into Postman to get started quickly.
 - Remember to update the environment variables such as `base_url` and authentication tokens as needed.
 
