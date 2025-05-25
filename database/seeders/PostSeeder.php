@@ -31,7 +31,7 @@ class PostSeeder extends Seeder
                 }
                 $data[] = [
                     'title' => fake()->sentence(),
-                    'content' => fake()->paragraph(),
+                    'content' => fake()->text(250),
                     'status' => $status,
                     'scheduled_time' => $status !== 'draft' ? $randomDate->format('Y-m-d H:i:s') : null,
                     'published_at' => $status === 'published' ? $randomDate->addMinutes(rand(1, 5))->format('Y-m-d H:i:s') : null,

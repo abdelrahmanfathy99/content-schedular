@@ -2,10 +2,20 @@
 
 namespace App\Http\Requests;
 
+use App\Constants\PlatFormConstants;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class PostRequest extends FormRequest
 {
+
+    protected array $platformMaxLengths = [
+        PlatFormConstants::FACEBOOK->value => 63206,
+        PlatFormConstants::INSTAGRAM->value => 2200,
+        PlatFormConstants::TWITTER->value => 280,
+        PlatFormConstants::LINKEDIN->value => 3000
+    ];
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -29,6 +39,25 @@ class PostRequest extends FormRequest
             'platform_ids' => 'required|array',
             'platform_ids.*' => 'integer|exists:platforms,id',
         ];
+    }
+
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            $content = $this->input('content', '');
+            $platformIds = $this->input('platform_ids', []);
+
+            foreach ($platformIds as $platformId) {
+                $maxLength = $this->platformMaxLengths[$platformId] ?? null;
+                $platformEnum = PlatFormConstants::tryFrom($platformId);
+                if ($maxLength !== null && strlen($content) > $maxLength) {
+                    $validator->errors()->add(
+                        'content',
+                        "Content exceeds the maximum allowed length of {$maxLength} characters for {$platformEnum->label()} platform"
+                    );
+                }
+            }
+        });
     }
 
     /**
