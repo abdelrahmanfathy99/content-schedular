@@ -102,10 +102,21 @@ class Post extends Model
     public function syncPlatforms(array $platformIds, string $status)
     {
         $syncData = [];
+        $oldPlatformIds = $this->platforms()->pluck('platforms.id')->toArray();
         foreach ($platformIds as $platFormId) {
             $syncData[$platFormId] = ['status' => $status];
         }
 
         $this->platforms()->sync($syncData);
+
+        if ($oldPlatformIds !== $platformIds) {
+            activity()
+                ->performedOn($this)
+                ->withProperties([
+                    'old_platform_ids' => $oldPlatformIds,
+                    'new_platform_ids' => $platformIds,
+                ])
+                ->log('Post platforms updated');
+        }
     }
 }
