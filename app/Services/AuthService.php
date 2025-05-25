@@ -8,11 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class AuthService
 {
-    protected $userRepo;
-
-    public function __construct(UserRepositoryInterface $userRepo)
+    public function __construct(protected UserRepositoryInterface $userRepository)
     {
-        $this->userRepo = $userRepo;
+        $this->userRepository = $userRepository;
     }
 
     public function register(array $data)
@@ -22,7 +20,7 @@ class AuthService
             unset($data['password_confirmation']);
             $data['email_verified_at'] = now();
             $data['password'] = bcrypt($data['password']);
-            $user = $this->userRepo->create($data);
+            $user = $this->userRepository->create($data);
             $token = $user->createToken('user', ['app:all'])->plainTextToken;
 
             DB::commit();
@@ -77,7 +75,7 @@ class AuthService
         $user = Auth::user();
 
         if ($user) {
-            $user->currentAccessToken()->delete();
+            $this->userRepository->deleteToken($user);
 
             return response()->json([
                 'status' => true,

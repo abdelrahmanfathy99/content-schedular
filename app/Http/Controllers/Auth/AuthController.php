@@ -8,9 +8,8 @@ use App\Services\AuthService;
 
 class AuthController extends Controller
 {
-    protected $auth;
 
-    public function __construct(AuthService $auth)
+    public function __construct(protected AuthService $auth)
     {
         $this->auth = $auth;
     }
